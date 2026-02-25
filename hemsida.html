@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Game Hub - Min Spelsamling</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-card: #21262d;
+            --border-color: #30363d;
+            --text-primary: #e6edf3;
+            --text-secondary: #7d8590;
+            --accent: #2f81f7;
+            --accent-hover: #388bfd;
+            --success: #3fb950;
+            --warning: #d29922;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Noto Sans', Helvetica, Arial, sans-serif;
+            background-color: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        /* Header */
+        header {
+            background: linear-gradient(135deg, var(--bg-secondary) 0%, var(--bg-primary) 100%);
+            border-bottom: 1px solid var(--border-color);
+            padding: 2rem 1rem;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(47, 129, 247, 0.1) 0%, transparent 70%);
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.5; }
+            50% { transform: scale(1.1); opacity: 0.8; }
+        }
+
+        h1 {
+            font-size: 2.5rem;
+            margin-bottom: 0.5rem;
+            position: relative;
+            z-index: 1;
+            background: linear-gradient(90deg, var(--text-primary), var(--accent));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .subtitle {
+            color: var(--text-secondary);
+            font-size: 1.1rem;
+            position: relative;
+            z-index: 1;
+        }
+
+        /* Container */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem 1rem;
+        }
+
+        /* Filter/Sök */
+        .controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 250px;
+            position: relative;
+        }
+
+        .search-box input {
+            width: 100%;
+            padding: 0.75rem 1rem 0.75rem 2.5rem;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 6px;
+            color: var(--text-primary);
+            font-size: 0.9rem;
+            transition: all 0.3s ease;
+        }
+
+        .search-box input:focus {
+            outline: none;
+            border-color: var(--accent);
+            box-shadow: 0 0 0 3px rgba(47, 129, 247, 0.1);
+        }
+
+        .search-box::before {
+            content: '🔍';
+            position: absolute;
+            left: 0.75rem;
+            top: 50%;
+            transform: translateY(-50%);
+            opacity: 0.6;
+        }
+
+        .filter-tags {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .tag {
+            padding: 0.5rem 1rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .tag:hover, .tag.active {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+            transform: translateY(-2px);
+        }
+
+        /* Spel-grid */
+        .games-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+
+        /* Spel-kort */
+        .game-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+        }
+
+        .game-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--accent);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+        }
+
+        .game-thumbnail {
+            width: 100%;
+            height: 180px;
+            background: linear-gradient(135deg, var(--bg-card) 0%, var(--border-color) 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3rem;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .game-thumbnail img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .play-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .game-card:hover .play-overlay {
+            opacity: 1;
+        }
+
+        .play-button {
+            width: 60px;
+            height: 60px;
+            background: var(--accent);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.5rem;
+            transform: scale(0.8);
+            transition: transform 0.3s ease;
+        }
+
+        .game-card:hover .play-button {
+            transform: scale(1);
+        }
+
+        .game-info {
+            padding: 1.25rem;
+        }
+
+        .game-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            margin-bottom: 0.5rem;
+        }
+
+        .game-title {
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 0.25rem;
+        }
+
+        .game-category {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            background: var(--bg-card);
+            border-radius: 12px;
+            font-size: 0.75rem;
+            color: var(--accent);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .game-description {
+            color: var(--text-secondary);
+            font-size: 0.9rem;
+            line-height: 1.5;
+            margin-bottom: 1rem;
+        }
+
+        .game-meta {
+            display: flex;
+            gap: 1rem;
+            font-size: 0.85rem;
+            color: var(--text-secondary);
+        }
+
+        .meta-item {
+            display: flex;
+            align-items: center;
+            gap: 0.25rem;
+        }
+
+        /* Footer */
+        footer {
+            text-align: center;
+            padding: 2rem;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            margin-top: 3rem;
+        }
+
+        /* Modal för spel */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            z-index: 1000;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .modal.active {
+            display: flex;
+        }
+
+        .modal-content {
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            width: 100%;
+            max-width: 900px;
+            max-height: 90vh;
+            overflow: hidden;
+            position: relative;
+            border: 1px solid var(--border-color);
+        }
+
+        .modal-header {
+            padding: 1rem;
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-close {
+            background: none;
+            border: none;
+            color: var(--text-secondary);
+            font-size: 1.5rem;
+            cursor: pointer;
+            width: 36px;
+            height: 36px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border-radius: 6px;
+            transition: all 0.3s;
+        }
+
+        .modal-close:hover {
+            background: var(--bg-card);
+            color: var(--text-primary);
+        }
+
+        .game-frame {
+            width: 100%;
+            height: 600px;
+            border: none;
+            background: var(--bg-primary);
+        }
+
+        /* Responsiv */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            .games-grid { grid-template-columns: 1fr; }
+            .game-frame { height: 400px; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Guide-sektion (visas bara för utvecklaren) */
+        .dev-guide {
+            background: var(--bg-card);
+            border: 1px dashed var(--border-color);
+            border-radius: 8px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+            display: none;
+        }
+
+        .dev-guide.show {
+            display: block;
+        }
+
+        .dev-guide h3 {
+            color: var(--warning);
+            margin-bottom: 1rem;
+            font-size: 1rem;
+        }
+
+        .dev-guide code {
+            background: var(--bg-primary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            font-size: 0.9rem;
+            color: var(--accent);
+        }
+
+        .dev-guide pre {
+            background: var(--bg-primary);
+            padding: 1rem;
+            border-radius: 6px;
+            overflow-x: auto;
+            margin: 0.5rem 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .toggle-guide {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--bg-card);
+            border: 1px solid var(--border-color);
+            color: var(--text-secondary);
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.85rem;
+            transition: all 0.3s;
+            z-index: 100;
+        }
+
+        .toggle-guide:hover {
+            background: var(--accent);
+            color: white;
+            border-color: var(--accent);
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>🎮 Game Hub</h1>
+        <p class="subtitle">Samling av mina webbspel</p>
+    </header>
+
+    <div class="container">
+        <!-- Guide för utvecklaren (tryck på knappen nere till höger för att visa) -->
+        <div class="dev-guide" id="devGuide">
+            <h3>📋 Guide: Så här lägger du till nya spel</h3>
+            <p>För att lägga till ett nytt spel, kopiera koden nedan och lägg till i <code>games</code>-arrayen i JavaScript-sektionen:</p>
+            <pre>{
+    id: "unikt-id",
+    title: "Speltitel",
+    category: "action", // eller puzzle, arcade, strategy, etc.
+    description: "Kort beskrivning av spelet",
+    thumbnail: "🎮", // Emoji eller bild-URL
+    url: "spel-mapp/index.html", // Sökväg till spelet
+    date: "2024-01-15"
+}</pre>
+            <p><strong>Tips:</strong> Om spelet ligger i en undermapp (t.ex. <code>/games/mitt-spel/</code>), ange sökvägen som <code>games/mitt-spel/index.html</code></p>
+        </div>
+
+        <!-- Sök och filter -->
+        <div class="controls">
+            <div class="search-box">
+                <input type="text" id="searchInput" placeholder="Sök spel...">
+            </div>
+            <div class="filter-tags" id="categoryFilters">
+                <span class="tag active" data-category="all">Alla</span>
+                <span class="tag" data-category="action">Action</span>
+                <span class="tag" data-category="puzzle">Pussel</span>
+                <span class="tag" data-category="arcade">Arkad</span>
+                <span class="tag" data-category="strategy">Strategi</span>
+            </div>
+        </div>
+
+        <!-- Spel-grid -->
+        <div class="games-grid" id="gamesGrid">
+            <!-- Spel genereras här av JavaScript -->
+        </div>
+    </div>
+
+    <!-- Modal för att spela -->
+    <div class="modal" id="gameModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="modalTitle">Speltitel</h2>
+                <button class="modal-close" onclick="closeModal()">✕</button>
+            </div>
+            <iframe class="game-frame" id="gameFrame" src=""></iframe>
+        </div>
+    </div>
+
+    <button class="toggle-guide" onclick="toggleGuide()">⚙️ Utvecklare</button>
+
+    <footer>
+        <p>Byggd med ❤️ för GitHub Pages | <span id="gameCount">0</span> spel i samlingen</p>
+    </footer>
+
+    <script>
+        // ==========================================
+        // SPEL-DATA - LÄGG TILL NYA SPEL HÄR!
+        // ==========================================
+        const games = [
+            {
+                id: "exempel-1",
+                title: "Exempelspel",
+                category: "arcade",
+                description: "Detta är ett exempel på hur ett spel visas. Ersätt detta med ditt eget spel!",
+                thumbnail: "🎯",
+                url: "#", // Ändra till sökvägen till ditt spel, t.ex. "spel/snake/index.html"
+                date: "2024-01-01"
+            }
+            // Lägg till fler spel här genom att kopiera objektet ovan och lägga till kommatecken mellan
+        ];
+
+        // ==========================================
+        // FUNKTIONER - BEHÖVS INTE ÄNDRAS
+        // ==========================================
+        
+        let currentCategory = 'all';
+        let searchTerm = '';
+
+        function renderGames() {
+            const grid = document.getElementById('gamesGrid');
+            const filteredGames = games.filter(game => {
+                const matchesCategory = currentCategory === 'all' || game.category === currentCategory;
+                const matchesSearch = game.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
+                                    game.description.toLowerCase().includes(searchTerm.toLowerCase());
+                return matchesCategory && matchesSearch;
+            });
+
+            if (filteredGames.length === 0) {
+                grid.innerHTML = `
+                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-secondary);">
+                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
+                        <p>Inga spel hittades. Försök med en annan sökning eller kategori.</p>
+                    </div>
+                `;
+            } else {
+                grid.innerHTML = filteredGames.map(game => `
+                    <div class="game-card" onclick="openGame('${game.id}')">
+                        <div class="game-thumbnail">
+                            ${game.thumbnail.startsWith('http') || game.thumbnail.includes('.') 
+                                ? `<img src="${game.thumbnail}" alt="${game.title}" onerror="this.style.display='none'; this.parentElement.innerHTML='🎮';">` 
+                                : game.thumbnail}
+                            <div class="play-overlay">
+                                <div class="play-button">▶</div>
+                            </div>
+                        </div>
+                        <div class="game-info">
+                            <div class="game-header">
+                                <div>
+                                    <div class="game-title">${game.title}</div>
+                                    <span class="game-category">${game.category}</span>
+                                </div>
+                            </div>
+                            <div class="game-description">${game.description}</div>
+                            <div class="game-meta">
+                                <span class="meta-item">📅 ${game.date}</span>
+                                <span class="meta-item">▶️ Klicka för att spela</span>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+            }
+
+            document.getElementById('gameCount').textContent = games.length;
+        }
+
+        function openGame(gameId) {
+            const game = games.find(g => g.id === gameId);
+            if (game && game.url !== '#') {
+                document.getElementById('modalTitle').textContent = game.title;
+                document.getElementById('gameFrame').src = game.url;
+                document.getElementById('gameModal').classList.add('active');
+                document.body.style.overflow = 'hidden';
+            } else if (game.url === '#') {
+                alert('Detta är ett exempel. Ändra "url" i JavaScript-koden för att länka till ett riktigt spel!');
+            }
+        }
+
+        function closeModal() {
+            document.getElementById('gameModal').classList.remove('active');
+            document.getElementById('gameFrame').src = '';
+            document.body.style.overflow = '';
+        }
+
+        function toggleGuide() {
+            document.getElementById('devGuide').classList.toggle('show');
+        }
+
+        // Event listeners
+        document.getElementById('searchInput').addEventListener('input', (e) => {
+            searchTerm = e.target.value;
+            renderGames();
+        });
+
+        document.getElementById('categoryFilters').addEventListener('click', (e) => {
+            if (e.target.classList.contains('tag')) {
+                document.querySelectorAll('.tag').forEach(tag => tag.classList.remove('active'));
+                e.target.classList.add('active');
+                currentCategory = e.target.dataset.category;
+                renderGames();
+            }
+        });
+
+        // Stäng modal med Escape-tangenten
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') closeModal();
+        });
+
+        // Stäng modal vid klick utanför
+        document.getElementById('gameModal').addEventListener('click', (e) => {
+            if (e.target.id === 'gameModal') closeModal();
+        });
+
+        // Initiera
+        renderGames();
+    </script>
+</body>
+</html>
