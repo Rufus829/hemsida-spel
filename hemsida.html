@@ -148,130 +148,120 @@
             transform: translateY(-2px);
         }
 
-        /* Spel-grid */
-        .games-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-            gap: 1.5rem;
+        /* Spel-sektion */
+        .game-section {
             margin-bottom: 3rem;
-        }
-
-        /* Spel-kort */
-        .game-card {
             background: var(--bg-secondary);
             border: 1px solid var(--border-color);
             border-radius: 12px;
             overflow: hidden;
             transition: all 0.3s ease;
-            cursor: pointer;
-            position: relative;
         }
 
-        .game-card:hover {
-            transform: translateY(-5px);
+        .game-section:hover {
             border-color: var(--accent);
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
         }
 
-        .game-thumbnail {
-            width: 100%;
-            height: 180px;
-            background: linear-gradient(135deg, var(--bg-card) 0%, var(--border-color) 100%);
+        .game-header-bar {
+            padding: 1rem 1.5rem;
+            background: var(--bg-card);
+            border-bottom: 1px solid var(--border-color);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        }
+
+        .game-title-section {
             display: flex;
             align-items: center;
-            justify-content: center;
-            font-size: 3rem;
-            position: relative;
-            overflow: hidden;
+            gap: 1rem;
         }
 
-        .game-thumbnail img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-        }
-
-        .play-overlay {
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.7);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .game-card:hover .play-overlay {
-            opacity: 1;
-        }
-
-        .play-button {
-            width: 60px;
-            height: 60px;
-            background: var(--accent);
-            border-radius: 50%;
+        .game-icon {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-secondary);
+            border-radius: 8px;
             display: flex;
             align-items: center;
             justify-content: center;
             font-size: 1.5rem;
-            transform: scale(0.8);
-            transition: transform 0.3s ease;
+            border: 1px solid var(--border-color);
         }
 
-        .game-card:hover .play-button {
-            transform: scale(1);
-        }
-
-        .game-info {
-            padding: 1.25rem;
-        }
-
-        .game-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: start;
-            margin-bottom: 0.5rem;
-        }
-
-        .game-title {
-            font-size: 1.2rem;
+        .game-title-section h2 {
+            font-size: 1.25rem;
             font-weight: 600;
-            margin-bottom: 0.25rem;
         }
 
-        .game-category {
+        .game-category-badge {
             display: inline-block;
             padding: 0.25rem 0.75rem;
-            background: var(--bg-card);
+            background: var(--accent);
+            color: white;
             border-radius: 12px;
             font-size: 0.75rem;
-            color: var(--accent);
             text-transform: uppercase;
             letter-spacing: 0.5px;
         }
 
-        .game-description {
+        .game-description-text {
             color: var(--text-secondary);
             font-size: 0.9rem;
-            line-height: 1.5;
-            margin-bottom: 1rem;
+            margin-top: 0.25rem;
         }
 
-        .game-meta {
+        .game-meta-info {
             display: flex;
             gap: 1rem;
             font-size: 0.85rem;
             color: var(--text-secondary);
         }
 
-        .meta-item {
-            display: flex;
-            align-items: center;
-            gap: 0.25rem;
+        /* Iframe-container */
+        .iframe-container {
+            position: relative;
+            width: 100%;
+            height: 600px;
+            background: var(--bg-primary);
+        }
+
+        .game-iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            background: var(--bg-primary);
+        }
+
+        .iframe-loading {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+            color: var(--text-secondary);
+            pointer-events: none;
+        }
+
+        .iframe-loading.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--accent);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
 
         /* Footer */
@@ -283,97 +273,7 @@
             margin-top: 3rem;
         }
 
-        /* Modal för spel */
-        .modal {
-            display: none;
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.9);
-            z-index: 1000;
-            align-items: center;
-            justify-content: center;
-            padding: 2rem;
-        }
-
-        .modal.active {
-            display: flex;
-        }
-
-        .modal-content {
-            background: var(--bg-secondary);
-            border-radius: 12px;
-            width: 100%;
-            max-width: 900px;
-            max-height: 90vh;
-            overflow: hidden;
-            position: relative;
-            border: 1px solid var(--border-color);
-        }
-
-        .modal-header {
-            padding: 1rem;
-            border-bottom: 1px solid var(--border-color);
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-
-        .modal-close {
-            background: none;
-            border: none;
-            color: var(--text-secondary);
-            font-size: 1.5rem;
-            cursor: pointer;
-            width: 36px;
-            height: 36px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            border-radius: 6px;
-            transition: all 0.3s;
-        }
-
-        .modal-close:hover {
-            background: var(--bg-card);
-            color: var(--text-primary);
-        }
-
-        .game-frame {
-            width: 100%;
-            height: 600px;
-            border: none;
-            background: var(--bg-primary);
-        }
-
-        /* Responsiv */
-        @media (max-width: 768px) {
-            h1 { font-size: 1.75rem; }
-            .games-grid { grid-template-columns: 1fr; }
-            .game-frame { height: 400px; }
-        }
-
-        /* Scrollbar */
-        ::-webkit-scrollbar {
-            width: 10px;
-        }
-
-        ::-webkit-scrollbar-track {
-            background: var(--bg-primary);
-        }
-
-        ::-webkit-scrollbar-thumb {
-            background: var(--border-color);
-            border-radius: 5px;
-        }
-
-        ::-webkit-scrollbar-thumb:hover {
-            background: var(--text-secondary);
-        }
-
-        /* Guide-sektion (visas bara för utvecklaren) */
+        /* Guide-sektion */
         .dev-guide {
             background: var(--bg-card);
             border: 1px dashed var(--border-color);
@@ -409,6 +309,7 @@
             overflow-x: auto;
             margin: 0.5rem 0;
             border: 1px solid var(--border-color);
+            color: var(--text-primary);
         }
 
         .toggle-guide {
@@ -431,30 +332,84 @@
             color: white;
             border-color: var(--accent);
         }
+
+        /* Responsiv */
+        @media (max-width: 768px) {
+            h1 { font-size: 1.75rem; }
+            .iframe-container { height: 400px; }
+            .game-header-bar { flex-direction: column; align-items: flex-start; }
+        }
+
+        /* Scrollbar */
+        ::-webkit-scrollbar {
+            width: 10px;
+        }
+
+        ::-webkit-scrollbar-track {
+            background: var(--bg-primary);
+        }
+
+        ::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 5px;
+        }
+
+        ::-webkit-scrollbar-thumb:hover {
+            background: var(--text-secondary);
+        }
+
+        /* Inget resultat */
+        .no-results {
+            text-align: center;
+            padding: 3rem;
+            color: var(--text-secondary);
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px dashed var(--border-color);
+        }
+
+        .no-results-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
     </style>
 </head>
 <body>
 
     <header>
         <h1>🎮 Game Hub</h1>
-        <p class="subtitle">Samling av mina webbspel</p>
+        <p class="subtitle">Spela direkt i webbläsaren</p>
     </header>
 
     <div class="container">
-        <!-- Guide för utvecklaren (tryck på knappen nere till höger för att visa) -->
+        <!-- Guide för utvecklaren -->
         <div class="dev-guide" id="devGuide">
             <h3>📋 Guide: Så här lägger du till nya spel</h3>
-            <p>För att lägga till ett nytt spel, kopiera koden nedan och lägg till i <code>games</code>-arrayen i JavaScript-sektionen:</p>
-            <pre>{
-    id: "unikt-id",
-    title: "Speltitel",
-    category: "action", // eller puzzle, arcade, strategy, etc.
-    description: "Kort beskrivning av spelet",
-    thumbnail: "🎮", // Emoji eller bild-URL
-    url: "spel-mapp/index.html", // Sökväg till spelet
-    date: "2024-01-15"
-}</pre>
-            <p><strong>Tips:</strong> Om spelet ligger i en undermapp (t.ex. <code>/games/mitt-spel/</code>), ange sökvägen som <code>games/mitt-spel/index.html</code></p>
+            <p>Kopiera kodblocket nedan och klistra in det inuti <code>&lt;div id="gamesContainer"&gt;</code> för att lägga till ett nytt spel:</p>
+            <pre>&lt;!-- SPEL: Ditt spelnamn --&gt;
+&lt;div class="game-section" data-category="action" data-title="Ditt spelnamn"&gt;
+    &lt;div class="game-header-bar"&gt;
+        &lt;div class="game-title-section"&gt;
+            &lt;div class="game-icon"&gt;🎮&lt;/div&gt;
+            &lt;div&gt;
+                &lt;h2&gt;Ditt spelnamn&lt;/h2&gt;
+                &lt;span class="game-category-badge"&gt;action&lt;/span&gt;
+                &lt;div class="game-description-text"&gt;Beskrivning av spelet&lt;/div&gt;
+            &lt;/div&gt;
+        &lt;/div&gt;
+        &lt;div class="game-meta-info"&gt;
+            &lt;span&gt;📅 2024-01-15&lt;/span&gt;
+        &lt;/div&gt;
+    &lt;/div&gt;
+    &lt;div class="iframe-container"&gt;
+        &lt;div class="iframe-loading"&gt;
+            &lt;div class="spinner"&gt;&lt;/div&gt;
+            &lt;div&gt;Laddar spel...&lt;/div&gt;
+        &lt;/div&gt;
+        &lt;iframe class="game-iframe" src="games/ditt-spel/index.html" title="Ditt spelnamn"&gt;&lt;/iframe&gt;
+    &lt;/div&gt;
+&lt;/div&gt;</pre>
+            <p><strong>Viktigt:</strong> Ändra <code>data-category</code> till någon av: action, puzzle, arcade, strategy</p>
         </div>
 
         <!-- Sök och filter -->
@@ -471,20 +426,46 @@
             </div>
         </div>
 
-        <!-- Spel-grid -->
-        <div class="games-grid" id="gamesGrid">
-            <!-- Spel genereras här av JavaScript -->
-        </div>
-    </div>
+        <!-- Spel-container -->
+        <div id="gamesContainer">
+            
+            <!-- ========================================== -->
+            <!-- LÄGG TILL NYA SPEL HÄR NEDANFÖR! -->
+            <!-- ========================================== -->
 
-    <!-- Modal för att spela -->
-    <div class="modal" id="gameModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="modalTitle">Speltitel</h2>
-                <button class="modal-close" onclick="closeModal()">✕</button>
+            <!-- EXEMPELSPEL (ta bort eller ersätt detta) -->
+            <div class="game-section" data-category="arcade" data-title="Exempelspel">
+                <div class="game-header-bar">
+                    <div class="game-title-section">
+                        <div class="game-icon">🎯</div>
+                        <div>
+                            <h2>Exempelspel</h2>
+                            <span class="game-category-badge">arcade</span>
+                            <div class="game-description-text">Detta är ett exempel. Ändra src i iframe till din egen spel-sökväg!</div>
+                        </div>
+                    </div>
+                    <div class="game-meta-info">
+                        <span>📅 2024-01-01</span>
+                    </div>
+                </div>
+                <div class="iframe-container">
+                    <div class="iframe-loading">
+                        <div class="spinner"></div>
+                        <div>Laddar spel...</div>
+                    </div>
+                    <!-- Ändra src nedan till din spelfils sökväg -->
+                    <iframe class="game-iframe" src="about:blank" title="Exempelspel"></iframe>
+                </div>
             </div>
-            <iframe class="game-frame" id="gameFrame" src=""></iframe>
+
+            <!-- LÄGG TILL FLER SPEL HÄR! Kopiera exemplet ovan och klistra in här -->
+
+        </div>
+
+        <!-- Meddelande när inga spel hittas -->
+        <div class="no-results" id="noResults" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <p>Inga spel hittades med denna sökning eller kategori.</p>
         </div>
     </div>
 
@@ -496,101 +477,56 @@
 
     <script>
         // ==========================================
-        // SPEL-DATA - LÄGG TILL NYA SPEL HÄR!
-        // ==========================================
-        const games = [
-            {
-                id: "exempel-1",
-                title: "Exempelspel",
-                category: "arcade",
-                description: "Detta är ett exempel på hur ett spel visas. Ersätt detta med ditt eget spel!",
-                thumbnail: "🎯",
-                url: "#", // Ändra till sökvägen till ditt spel, t.ex. "spel/snake/index.html"
-                date: "2024-01-01"
-            }
-            // Lägg till fler spel här genom att kopiera objektet ovan och lägga till kommatecken mellan
-        ];
-
-        // ==========================================
-        // FUNKTIONER - BEHÖVS INTE ÄNDRAS
+        // FILTER OCH SÖK - BEHÖVS INTE ÄNDRAS
         // ==========================================
         
         let currentCategory = 'all';
         let searchTerm = '';
 
-        function renderGames() {
-            const grid = document.getElementById('gamesGrid');
-            const filteredGames = games.filter(game => {
-                const matchesCategory = currentCategory === 'all' || game.category === currentCategory;
-                const matchesSearch = game.title.toLowerCase().includes(searchTerm.toLowerCase()) || 
-                                    game.description.toLowerCase().includes(searchTerm.toLowerCase());
-                return matchesCategory && matchesSearch;
+        function updateGames() {
+            const games = document.querySelectorAll('.game-section');
+            let visibleCount = 0;
+
+            games.forEach(game => {
+                const category = game.dataset.category;
+                const title = game.dataset.title.toLowerCase();
+                const description = game.querySelector('.game-description-text').textContent.toLowerCase();
+                
+                const matchesCategory = currentCategory === 'all' || category === currentCategory;
+                const matchesSearch = title.includes(searchTerm.toLowerCase()) || 
+                                    description.includes(searchTerm.toLowerCase());
+
+                if (matchesCategory && matchesSearch) {
+                    game.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    game.style.display = 'none';
+                }
             });
 
-            if (filteredGames.length === 0) {
-                grid.innerHTML = `
-                    <div style="grid-column: 1/-1; text-align: center; padding: 3rem; color: var(--text-secondary);">
-                        <div style="font-size: 3rem; margin-bottom: 1rem;">🔍</div>
-                        <p>Inga spel hittades. Försök med en annan sökning eller kategori.</p>
-                    </div>
-                `;
-            } else {
-                grid.innerHTML = filteredGames.map(game => `
-                    <div class="game-card" onclick="openGame('${game.id}')">
-                        <div class="game-thumbnail">
-                            ${game.thumbnail.startsWith('http') || game.thumbnail.includes('.') 
-                                ? `<img src="${game.thumbnail}" alt="${game.title}" onerror="this.style.display='none'; this.parentElement.innerHTML='🎮';">` 
-                                : game.thumbnail}
-                            <div class="play-overlay">
-                                <div class="play-button">▶</div>
-                            </div>
-                        </div>
-                        <div class="game-info">
-                            <div class="game-header">
-                                <div>
-                                    <div class="game-title">${game.title}</div>
-                                    <span class="game-category">${game.category}</span>
-                                </div>
-                            </div>
-                            <div class="game-description">${game.description}</div>
-                            <div class="game-meta">
-                                <span class="meta-item">📅 ${game.date}</span>
-                                <span class="meta-item">▶️ Klicka för att spela</span>
-                            </div>
-                        </div>
-                    </div>
-                `).join('');
-            }
-
+            // Visa/dölj "inga resultat"-meddelande
+            document.getElementById('noResults').style.display = visibleCount === 0 ? 'block' : 'none';
+            
+            // Uppdatera räknare
             document.getElementById('gameCount').textContent = games.length;
-        }
-
-        function openGame(gameId) {
-            const game = games.find(g => g.id === gameId);
-            if (game && game.url !== '#') {
-                document.getElementById('modalTitle').textContent = game.title;
-                document.getElementById('gameFrame').src = game.url;
-                document.getElementById('gameModal').classList.add('active');
-                document.body.style.overflow = 'hidden';
-            } else if (game.url === '#') {
-                alert('Detta är ett exempel. Ändra "url" i JavaScript-koden för att länka till ett riktigt spel!');
-            }
-        }
-
-        function closeModal() {
-            document.getElementById('gameModal').classList.remove('active');
-            document.getElementById('gameFrame').src = '';
-            document.body.style.overflow = '';
         }
 
         function toggleGuide() {
             document.getElementById('devGuide').classList.toggle('show');
         }
 
-        // Event listeners
+        // Hantera iframe-laddning
+        document.querySelectorAll('.game-iframe').forEach(iframe => {
+            iframe.addEventListener('load', function() {
+                const loading = this.parentElement.querySelector('.iframe-loading');
+                if (loading) loading.classList.add('hidden');
+            });
+        });
+
+        // Event listeners för sök och filter
         document.getElementById('searchInput').addEventListener('input', (e) => {
             searchTerm = e.target.value;
-            renderGames();
+            updateGames();
         });
 
         document.getElementById('categoryFilters').addEventListener('click', (e) => {
@@ -598,22 +534,12 @@
                 document.querySelectorAll('.tag').forEach(tag => tag.classList.remove('active'));
                 e.target.classList.add('active');
                 currentCategory = e.target.dataset.category;
-                renderGames();
+                updateGames();
             }
         });
 
-        // Stäng modal med Escape-tangenten
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') closeModal();
-        });
-
-        // Stäng modal vid klick utanför
-        document.getElementById('gameModal').addEventListener('click', (e) => {
-            if (e.target.id === 'gameModal') closeModal();
-        });
-
         // Initiera
-        renderGames();
+        updateGames();
     </script>
 </body>
 </html>
